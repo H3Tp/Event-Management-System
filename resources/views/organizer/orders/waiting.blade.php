@@ -1,0 +1,55 @@
+@extends('layouts.app')
+
+@section('content')
+<div class="container mt-3">
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">📌 Waiting Orders</h4>
+            <span class="badge bg-light text-dark">Total: {{ $orders->count() }}</span>
+        </div>
+
+        <div class="card-body p-0">
+            <div class="table-responsive" style="max-height: 450px; overflow-y: auto;">
+                <table class="table table-striped table-hover align-middle mb-0 text-center">
+                    <thead class="table-dark sticky-top">
+                        <tr>
+                            <th>User</th>
+                            <th>Event</th>
+                            <th>Date</th>
+                            <th>Price</th>
+                            <th>Booked On</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($orders as $order)
+                            <tr>
+                                <td>{{ $order->user->name ?? 'Guest User' }}</td>
+                                <td>{{ $order->room->roomtype->name ?? 'N/A' }}</td>
+                                <td>{{ \Carbon\Carbon::parse($order->check_in)->format('d M Y') }}</td>
+                                <td>${{ number_format($order->room->price ?? 0, 2) }}</td>
+                                <td>{{ $order->created_at->format('d M Y, h:i A') }}</td>
+                                <td>
+                                    <span class="badge bg-secondary px-3 py-2 text-capitalize">
+                                        {{ $order->status }}
+                                    </span>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="6" class="text-center py-4">
+                                    <div class="text-muted">
+                                        <i class="bi bi-calendar-x fs-2 d-block mb-2"></i>
+                                        <strong>No waiting orders found</strong>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
